@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  ubuntu-desktop:
+    # Sử dụng một image Ubuntu gốc, không có sẵn gói đồ họa.
+    image: ubuntu:20.04
+
+    # Đặt tên cho container để dễ quản lý.
+    container_name: my-remote-desktop
+
+    # Ánh xạ cổng (port mapping)
+    # - 5901 trên container (cổng VNC mặc định) sang cổng 5901 trên máy thật.
+    # - 22 trên container (cổng SSH) sang cổng 2222 trên máy thật (tránh trùng với cổng 22 của máy thật).
+    ports:
+      - "5901:5901"
+      - "2222:22"
+
+    # Lệnh này giữ cho container luôn chạy ở chế độ nền.
+    command: tail -f /dev/null
+
+    # Tăng kích thước bộ nhớ chia sẻ, cần thiết cho một số ứng dụng đồ họa.
+    shm_size: "2gb"

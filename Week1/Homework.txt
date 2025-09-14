@@ -1,0 +1,70 @@
+1. Docker là gì?
+- Docker = cách “đóng hộp” app + môi trường (thư viện, runtime) thành image. Chạy image thành container
+- Khác VM: container dùng chung kernel của máy chủ (nhẹ, khởi động nhanh), VM thì có cả hệ điều hành riêng (nặng hơn)
+- Bản chất: Docker giúp đóng gói app (code + thư viện + runtime + config) thành image, sau đó triển khai (deploy) image đó thành bất kì máy nào có Docker, mà không lo “chạy được trên máy A, lỗi trên máy B” → là công cụ tạo ra gói chạy được ở mọi nơi.
+- Các khối chính:
+    - Image: khuôn đúc bất biến (read-only), build từ Dockerfile
+    - Container: instance đang chạy của image
+    - Registry: nơi lưu image (Docker Hub, GHCR…)
+    - Volume: thư mục “bền vững” để giữ dữ liệu
+    - Network: kết nối các container với nhau/ra ngoài
+2. docker-compose là gì?
+- Mục tiêu: Khi app gồm nhiều dịch vụ (web + db + cache…), viết một file YAML để khởi chạy tất cả cùng lúc (quản lý nhiều container chạy cùng lúc).
+3. Linux, Unix, BSD hay *nix, macOS thuộc loại nào?
+- Unix: “ông tổ” hệ điều hành. Ngày nay “UNIX®” còn là **chứng nhận** theo chuẩn SUS/POSIX.
+- *nix/Unix-like: Họ hàng giống Unix (tuân POSIX) nhưng không phải bản Unix gốc được chứng nhận: Linux, FreeBSD, OpenBSD, NetBSD…
+- Linux: kernel do Linus Torvalds viết (1991). “Bản phân phối” như Ubuntu, Debian… = Linux kernel + userland (phần mềm GNU, package manager,…). Giấy phép GPL
+- BSD: nhánh họ hàng từ Berkeley UNIX. Nổi bật: FreeBSD, OpenBSD, NetBSD. Giấy phép BSD (thoáng hơn GPL)
+- macOS dựa trên Darwin (kernel XNU = Mach + BSD), là Unix-like và còn được chứng nhận là UNIX, thuộc họ nix
+- Phả hệ:
+
+Unix (gốc / tiêu chuẩn POSIX, SUS - có chứng nhận)
+├─> BSD family  (FreeBSD, OpenBSD, NetBSD)   → Unix-like
+├─> macOS (Darwin/XNU)                       → UNIX® (được chứng nhận)
+└─> Linux kernel (1991)                      → Unix-like
+               ├─ Ubuntu / Debian / Mint / Pop!_OS
+               ├─ Fedora / RHEL / CentOS / Rocky
+               ├─ Arch / Manjaro
+               └─ Alpine (nhẹ, hay dùng cho Docker)
+
+- Cơ bản:
+    - Distro (Distribution): Là bản phân phối, vì Linux chỉ là kernel, muốn dùng được thì cần thêm Userland (các lệnh cơ bản: ls, cp, rm… do GNU cung cấp), trình quản lý gói (apt, dnf, pacman…) để cài phần mềm, cấu hình mặc định, desktop environment.
+    - Kernel: Là hạt nhân hệ điều hành, quản lý tài nguyên (CPU, RAM, Ổ đĩa, mạng), là lớp trung gian giữa hardware và userland.
+    - Userland: Toàn bộ công cụ và phần mềm chạy bên ngoài kernel, bao gồm shell (bash, zsh), lệnh (ls, cd…), compiler, libraries.
+    - Trình quản lý gói (Packet Manager): công cụ giúp cài/upgrade/remove phần mềm trong distro: apt(Ubuntu, Debian), dnf,/yum (Fedora, RHEL), pacman (Arch), apk (Alpine),…
+    - Darwin & XNU (macOS): Darwin là hệ điều hành lõi open-source mà macOS dựng trên, XNU là kernel của Darwin
+    - BSD: là phiên bản *nix do đại học Berkeley phát triển.
+    - So sánh BSD và Linux:
+    
+    | Tiêu chí | **BSD** | **Linux** |
+    | --- | --- | --- |
+    | Nguồn gốc | Nhánh từ Unix gốc (Berkeley) | Kernel mới viết từ 1991 (Linus) |
+    | Bản chất | **OS nguyên khối** (kernel + userland cùng phát triển) | **Chỉ kernel**, distro ghép thêm GNU userland |
+    | Giấy phép | BSD (thoáng) | GPL (bắt buộc mở nếu phát hành dẫn xuất) |
+    | Quản lý | Nhỏ gọn, tập trung (FreeBSD Project, OpenBSD Team…) | Phân tán, cộng đồng khổng lồ, nhiều distro |
+    | Server | FreeBSD mạnh về network, storage | Linux chiếm thị phần server, cloud |
+    | Desktop | Ít phổ biến, support phần cứng hạn chế | Nhiều distro desktop-friendly |
+    | Bảo mật | OpenBSD “trùm” | Linux có SELinux/AppArmor nhưng phức tạp hơn |
+4. Alpine vs Ubuntu
+- Ubuntu:
+    - Là bản phân phối dựa trên Debian
+    - Mục tiêu: Dễ dùng, đầy đủ, phổ biến
+    - Quản lý gói: apt
+    - Có nhiều biến thể: Ubuntu Desktop (kèm GUI), Ubuntu Server (nhẹ, không GUI, dùng cho server), Ubuntu Minimal / Cloud Image: bản rút gọn cho VM, container.
+- Alpine:
+    - Là bản phân phối của Linux
+    - Siêu nhẹ, bảo mật, tối giản
+    - Quản lý gói: apk
+- Khi mới bắt đầu, chọn Ubuntu/Debian-slim cho đỡ dính lỗi tương thích; tối ưu sau hãy nghĩ tới Alpine
+5. VNC là gì?
+- VNC (Virtual Network Computing) = giao thức remote desktop (gửi hình ảnh màn hình + nhận chuột/bàn phím). Dùng RFB protocol qua cổng mặc định 5900. (có thể hiểu nó giống như là Teamviewer hay Ultraview)
+    - Thành phần: VNC server (máy bị điều khiển) + VNC client/viewer (máy điều khiển)
+    - So với SSH: SSH là điều khiển dòng lệnh; VNC là màn hình đồ họa.
+    - So với RDP (Windows): RDP tối ưu hơn cho Windows; VNC đa nền tảng, đơn giản.
+    - Bảo mật: Gốc VNC không mã hóa mạnh → Thường đi kèm SSH turnel/VPN hoặc dùng bản có mã hóa (RealVNC, TigerVNC…)
+    - Use case: cấu hình máy server đầu xa có GUI, hỗ trợ người dùng , lab dạy học, truy cập desktop container.
+- Ứng dụng thực tế
+    - IT Support: truy cập desktop từ xa để fix lỗi
+    - Server GUI: khi quản trị Linux server nhưng cần GUI (VD: remote Ubuntu desktop).
+    - Docker/Cloud: chạy GUI app trong container → kết nối bằng noVNC qua trình duyệt.
+    - Lab học tập: VNC giúp connect nhiều máy trong mạng LAN.
