@@ -1,0 +1,25 @@
+Bước 1: Tạo file cấu hình docker-compose.yml
+Bước 2: Khởi chạy container bằng lệnh docker-compose up -d
+Bước 3: Truy cập và Cài đặt môi trường
+1. Truy cập vào container docker exec -it my-remote-desktop /bin/bash
+2. Cài đặt các gói cần thiết 
+apt-get update
+apt-get install -y sudo nano xfce4 xfce4-goodies tigervnc-standalone-server
+Bước 4: Tạo người dùng và cấu hình VNC
+1. Tạo người dùng mới
+useradd -m -s /bin/bash celdoon
+passwd 27022005
+2. Chuyển sang người dùng mới
+su - celdoon
+3. Khởi tạo và đặt mật khẩu VNC
+vncserver
+4. Cấu hình VNC để chạy XFCE
+vncserver -kill :1
+nano ~/.vnc/xstartup
+#!/bin/bash
+startxfce4 &
+chmod +x ~/.vnc/xstartup
+Bước 5: Khởi động VNC Server và kết nối
+1. Khởi động server VNC
+vncserver -localhost no -geometry 1280x720
+2. Kết nối từ máy thật bằng RealVNC
